@@ -1,3 +1,10 @@
+/*
+ * Coordinate
+ * Version 1.0
+ * Date 26.10.2015
+ * Copyright (c) 2015 by Sabrina Jahn
+ */
+
 package org.wahlzeit.model;
 
 import java.security.InvalidParameterException;
@@ -9,14 +16,12 @@ public class Coordinate {
 
 	public Coordinate(double latitude, double longitude) {
 		String msg = "Wrong parameters! longitude has interval [-180,180], latitude has interval [-90,90].";
+		// Input validation longitude
 		if (longitude < -180 || longitude > 180) {
-			// ERROR
 			throw new InvalidParameterException(msg);
-
 		}
-
+		// Input validation latitude
 		if (latitude < -90 || latitude > 90) {
-			// ERROR
 			throw new InvalidParameterException(msg);
 		}
 
@@ -30,21 +35,27 @@ public class Coordinate {
 	}
 
 	public double getLatitudinalDistance(Coordinate lat) {
-		double la = 0;
-		if (latitude < 0 || lat.getLatitude() < 0) {
-			la = Math.min(lat.getLatitude() - latitude, latitude - lat.getLatitude());
-		} else {
-			la = lat.getLatitude() - latitude;
+		double la = latitude - lat.getLatitude();
+		//calculation shortest distance
+		if (Math.abs(la) > 90) {
+			if (la < 0) {
+				la += 180;
+			} else {
+				la -= 180;
+			}
 		}
 		return la;
 	}
 
 	public double getLongitudinalDistance(Coordinate lon) {
-		double lo = 0;
-		if (longitude < 0 || lon.getLatitude() < 0) {
-			lo = Math.min(lon.getLatitude() - longitude, longitude - lon.getLatitude());
-		} else {
-			lo = lon.getLatitude() - longitude;
+		double lo = longitude - lon.getLongitude();
+		//calculation shortest distance
+		if (Math.abs(lo) > 180) {
+			if (lo < 0) {
+				lo += 360;
+			} else {
+				lo -= 360;
+			}
 		}
 		return lo;
 	}
