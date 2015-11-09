@@ -9,40 +9,72 @@ package org.wahlzeit.model;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class PhotoCoordinateTest {
+	private SphericCoordinate location;
+	private SphericCoordinate location2;
+
+	private final double DELTA = 0.000001;
+
+	@Before
+	public void setup() {
+		location = new SphericCoordinate(50, 150);
+		location2 = new SphericCoordinate(-40, -160);
+	}
+		
 
 	@Test
-	public void test() {
-
-		Coordinate location;
-		Coordinate location2;
-		Coordinate location3;
-		// coordinate constructor test
-		location = new Coordinate(50, 150);
-		double lat1 = location.getLatitude();
-		double lon1 = location.getLongitude();
-		assertTrue(lat1 == 50);
-		assertTrue(lon1 == 150);
-
-		// distance tests
-		location2 = new Coordinate(-40, -160);
-		Coordinate test = location.getDistance(location2);
-		assertTrue(test.getLatitude() == 90);
-		assertTrue(test.getLongitude() == -50);
-
-		test = location2.getDistance(location);
-		assertTrue(test.getLatitude() == -90);
-		assertTrue(test.getLongitude() == 50);
-
-		// Input validation test
-		try {
-			location3 = new Coordinate(-91, -181);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-
+	public void testDefaultConstructor() {
+		SphericCoordinate test = new SphericCoordinate();
+		assertEquals(0.0, test.getLatitude(), 0);
+		assertEquals(0.0, test.getLongitude(), 0);
 	}
 
+	@Test
+	public void testOtherConstructor() {
+		assertEquals(50, location.getLatitude(), DELTA);
+		assertEquals(150, location.getLongitude(), DELTA);
+	}
+
+	@Test
+	public void testGetLatitudinalDistance() {
+		double latDist = location.getLatitudinalDistance(location2);
+		assertEquals(90, latDist, DELTA);
+
+	}
+	
+	@Test
+	public void testGetLongitudinalDistance(){
+		double longDist = location.getLongitudinalDistance(location2);
+		assertEquals(-50, longDist, DELTA);
+		
+	}
+
+	// TODO public void testGetDistance()
+	
+	
+	// Input validation test
+	@Test (expected = IllegalArgumentException.class)
+	public void testLatOutOfBouncehigh() {
+		SphericCoordinate location = new SphericCoordinate(91, 0);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testLatOutOfBouncelow() {
+		SphericCoordinate location = new SphericCoordinate(-91, 0);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testLongOutOfBouncehigh() {
+		SphericCoordinate location = new SphericCoordinate(0, 181);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testLongOutOfBouncelow() {
+		SphericCoordinate location = new SphericCoordinate(0, -181);
+	}
+
+	
 }
