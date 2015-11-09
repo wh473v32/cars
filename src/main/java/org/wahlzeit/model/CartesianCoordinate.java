@@ -26,34 +26,32 @@ public class CartesianCoordinate implements Coordinate {
 		this.z = z;
 	}
 	
-	/*TODO public double getDistance(Coordinate other) {
-		CartesianCoordinate otherCoord;
-		if(other instanceof CartesianCoordinate){
-			otherCoord = (CartesianCoordinate)other;
-		} else {
-			otherCoord = CartesianCoordinate.asCartesianCoordinate(other);
-		}
-		double euclidDist = Math.sqrt(Math.pow(this.x - otherCoord.x, 2)
-				+ Math.pow(this.y - otherCoord.y, 2) 
-				+ Math.pow(this.z - otherCoord.z, 2)); 
-		double omega = 2 * Math.asin(euclidDist / 2 / EARTH_RADIUS);
-		return omega * EARTH_RADIUS;
+	
+	/**
+	 * @MethodType query
+	 */	
+	public double getDistance(CartesianCoordinate coord) {
+		//TODO Input validation
+		
+		CartesianCoordinate other = coord;
+		
+		double euclidDist = Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2) + Math.pow(this.z - other.z, 2)); 
+		double result = 2 * Math.asin(euclidDist / 2 / EARTH_RADIUS);
+		return result * EARTH_RADIUS;
 	}
 	
 	public boolean isEqual(Coordinate other) {
-		if(other instanceof CartesianCoordinate){
-			return equals(other);
-		} else {
-			CartesianCoordinate otherCoord = 
-					CartesianCoordinate.asCartesianCoordinate(other);
-			return equals(otherCoord);
-		}
-	}*/
+		
+		//TODO
+		
+		return false;
+		
+	}
 	
 	/**
 	 * @methodType assertion
 	 */
-	public void coordValidation(SphericCoordinate test) {
+	public void coordValidation(CartesianCoordinate test) {
 		String msg = "Your Coordinate has an invalid value!";
 		if (test == null) {
 			throw new IllegalArgumentException(msg);

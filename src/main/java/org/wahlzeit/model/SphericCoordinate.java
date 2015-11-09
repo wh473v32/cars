@@ -43,9 +43,10 @@ public class SphericCoordinate implements Coordinate{
 	/**
 	 * @MethodType query
 	 */
-	public double getDistance(SphericCoordinate coord) {
+	public double getDistance(Coordinate coord) {
 		
-		//Input validation
+		
+		
 		coordValidation(coord);
 		
 		double distance = 0;
@@ -131,13 +132,9 @@ public class SphericCoordinate implements Coordinate{
 		}
 	}
 	
-	/*TODO public boolean isEqual(Coordinate other) {
-		if(other instanceof SphericCoordinate){
-			return equals(other);
-		} else {
-			 SphericCoordinate coord = 
-					 SphericCoordinate.asSphericCoordinate(other);
-			 return equals(coord);
-		}
-	}*/
+	//TODO 
+	public boolean isEqual(Coordinate other) {
+		return false;
+		
+	}
 }
