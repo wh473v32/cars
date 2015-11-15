@@ -1,6 +1,13 @@
+/*
+ * SphericCoordinate
+ * Version 2.0
+ * Date 13.11.2015
+ * Copyright (c) 2015 by Sabrina Jahn
+ */
+
 package org.wahlzeit.model;
 
-public class SphericCoordinate implements Coordinate{
+public class SphericCoordinate extends AbstractCoordinate{
 	
 	private double latitude;
 	private double longitude;
@@ -43,8 +50,8 @@ public class SphericCoordinate implements Coordinate{
 	/**
 	 * @MethodType query
 	 */
-	public double getDistance(Coordinate coord) {
-		
+	public double getDistance(SphericCoordinate coord) {
+
 		
 		
 		coordValidation(coord);
@@ -114,6 +121,10 @@ public class SphericCoordinate implements Coordinate{
 		return this.radius;
 	}
 	
+	/**
+	 * @methodType set
+	 */
+	
 	public void setRadius(double radius){
 		String msg = "The value of radius has to be greater than 0!";
 		if (radius < 0){
@@ -132,9 +143,88 @@ public class SphericCoordinate implements Coordinate{
 		}
 	}
 	
-	//TODO 
-	public boolean isEqual(Coordinate other) {
-		return false;
+	/**
+	 * @methodtype convertion
+	 */
+	@Override
+	protected SphericCoordinate inSpheric() {
+		return this;
+	}
+	
+	/**
+	 * @methodtype conversion
+	 */
+	@Override
+	protected CartesianCoordinate inCartesian() {
+
+		double radLat = Math.toRadians(this.latitude);
+		double radLong = Math.toRadians(this.longitude);
+
+		double x = this.radius * Math.cos(radLong)
+				* Math.sin(radLat);
+		double y = this.radius * Math.sin(radLong)
+				* Math.sin(radLat);
+		double z = this.radius * Math.cos(radLat);
+
+		return new CartesianCoordinate(x, y, z);
+	}
+	
+	
+	public boolean isEqual(SphericCoordinate other) {
+		
+		return equals(other);
 		
 	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(latitude);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(longitude);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(radius);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	/**
+	 * @methodtype booleanQuery
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof SphericCoordinate)) {
+			return false;
+		}
+		SphericCoordinate other = (SphericCoordinate) obj;
+		if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude)) {
+			return false;
+		}
+		if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude)) {
+			return false;
+		}
+		if (Double.doubleToLongBits(radius) != Double.doubleToLongBits(other.radius)) {
+			return false;
+		}
+		return true;
+	}
+
+
+	@Override
+	public String toString() {
+		return "SphericCoordinate [latitude=" + latitude + ", longitude=" + longitude + ", radius=" + radius + "]";
+	}
+
+	
+	
+	
 }
