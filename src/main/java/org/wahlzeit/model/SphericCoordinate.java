@@ -42,24 +42,27 @@ public class SphericCoordinate extends AbstractCoordinate{
 			throw new IllegalArgumentException(msg);
 		}
 
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.radius = radius;
+		setLatitude(latitude);
+		setLongitude(longitude);
+		setRadius(radius);
 	}
 	
 	/**
 	 * @MethodType query
 	 */
-	public double getDistance(SphericCoordinate coord) {
+	public double getDistance(Coordinate coord) {
 
-		
-		
 		coordValidation(coord);
+		SphericCoordinate other = (SphericCoordinate) coord;
+		if(coord instanceof CartesianCoordinate) {
+			other = ((CartesianCoordinate) coord).inSpheric();
+		}
+		
 		
 		double distance = 0;
 		double radiant1 = Math.toRadians(this.latitude);
-		double radiant2 = Math.toRadians(coord.getLatitude());
-		double radiantLongitudinalDistance = Math.toRadians(getLongitudinalDistance(coord));
+		double radiant2 = Math.toRadians(other.getLatitude());
+		double radiantLongitudinalDistance = Math.toRadians(getLongitudinalDistance(other));
 
 		distance = Math.acos(Math.sin(radiant1) * Math.sin(radiant2) + Math.cos(radiant1) * Math.cos(radiant2) * Math.cos(radiantLongitudinalDistance)) * EARTH_RADIUS;
 		
@@ -108,6 +111,20 @@ public class SphericCoordinate extends AbstractCoordinate{
 	}
 
 	/**
+	 * @param latitude the latitude to set
+	 */
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	/**
+	 * @param longitude the longitude to set
+	 */
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	/**
 	 * @methodType get
 	 */
 	public double getLongitude() {
@@ -136,7 +153,7 @@ public class SphericCoordinate extends AbstractCoordinate{
 	/**
 	 * @methodType assertion
 	 */
-	public void coordValidation(SphericCoordinate test) {
+	public void coordValidation(Coordinate test) {
 		String msg = "Your Coordinate has an invalid value!";
 		if (test == null) {
 			throw new IllegalArgumentException(msg);
@@ -144,9 +161,8 @@ public class SphericCoordinate extends AbstractCoordinate{
 	}
 	
 	/**
-	 * @methodtype convertion
+	 * @methodtype conversion
 	 */
-	@Override
 	protected SphericCoordinate inSpheric() {
 		return this;
 	}
@@ -154,7 +170,6 @@ public class SphericCoordinate extends AbstractCoordinate{
 	/**
 	 * @methodtype conversion
 	 */
-	@Override
 	protected CartesianCoordinate inCartesian() {
 
 		double radLat = Math.toRadians(this.latitude);
@@ -170,7 +185,7 @@ public class SphericCoordinate extends AbstractCoordinate{
 	}
 	
 	
-	public boolean isEqual(SphericCoordinate other) {
+	public boolean isEqual(Coordinate other) {
 		
 		return equals(other);
 		

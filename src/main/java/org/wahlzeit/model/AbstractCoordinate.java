@@ -13,7 +13,7 @@ public abstract class AbstractCoordinate implements Coordinate {
 	 * @methodtype query
 	 */
 	@Override
-	public double getDistance(Coordinate coord) {
+	public abstract double getDistance(Coordinate coord); /*{
 		coordValidation(coord);
 		SphericCoordinate own = ((AbstractCoordinate)this).inSpheric();
 		SphericCoordinate other = ((AbstractCoordinate)coord).inSpheric();
@@ -30,12 +30,12 @@ public abstract class AbstractCoordinate implements Coordinate {
 			
 		
 		return distance;
-	}
+	}*/
 
-	/**
+	/*
 	 * @MethodType query
 	 */
-	protected double getLongitudinalDistance(SphericCoordinate own, SphericCoordinate other) {
+	/*protected double getLongitudinalDistance(SphericCoordinate own, SphericCoordinate other) {
 		double lo = own.getLongitude() - other.getLongitude();
 		// calculation shortest distance
 		if (Math.abs(lo) > 180) {
@@ -46,13 +46,13 @@ public abstract class AbstractCoordinate implements Coordinate {
 			}
 		}
 		return lo;
-	}
+	}*/
 	
 	/**
 	 * @methodtype booleanQuery
 	 */
 	@Override
-	public boolean isEqual(Coordinate coord) {
+	public abstract boolean isEqual(Coordinate coord);/* {
 		SphericCoordinate own = ((AbstractCoordinate)this).inSpheric();
 		SphericCoordinate other = ((AbstractCoordinate) coord).inSpheric();
 		
@@ -76,26 +76,26 @@ public abstract class AbstractCoordinate implements Coordinate {
 			return false;
 		}
 		return true;
-	}
+	}*/
 	
-	/**
+	/*
 	 * @methodType assertion
 	 */
-	private void coordValidation(Coordinate test) {
+	/*private void coordValidation(Coordinate test) {
 		String msg = "Your Coordinate has an invalid value!";
 		if (test == null) {
 			throw new IllegalArgumentException(msg);
 		}
-	}
+	}*/
 	
-	/**
-	 * @methodtype convertion
+	/*
+	 * @methodtype conversion
 	 */
-	protected abstract CartesianCoordinate inCartesian();
+	//protected abstract CartesianCoordinate inCartesian();
 	
-	/**
-	 * @methodtype convertion
+	/*
+	 * @methodtype conversion
 	 */
-	protected abstract SphericCoordinate inSpheric();
+	//protected abstract SphericCoordinate inSpheric();
 
 }
