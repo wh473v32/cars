@@ -8,66 +8,46 @@
 package org.wahlzeit.model;
 
 public class CartesianCoordinate extends AbstractCoordinate {
-	
+
 	private double x;
 	private double y;
 	private double z;
-	
-	private static final int EARTH_RADIUS = 6371;
-	
+
 	/**
 	 * @methodtype constructor
 	 */
 	public CartesianCoordinate() {
-		setX(0.0);
-		setY(0.0);
-		setZ(0.0);
+		this(0,0,0);
 	}
-	
+
 	/**
 	 * @methodtype constructor
 	 */
 	public CartesianCoordinate(double x, double y, double z) {
+		assertInvariants();
+		
 		setX(x);
 		setY(y);
 		setZ(z);
-	}
-	
-	
-	/**
-	 * @MethodType query
-	 */	
-	public double getDistance(Coordinate coord) {
-		coordValidation(coord);
-		CartesianCoordinate other = (CartesianCoordinate) coord;
-		if(coord instanceof SphericCoordinate) {
-			other = ((SphericCoordinate) coord).inCartesian();
-		}
 		
-		double euclidDist = Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2) + Math.pow(this.z - other.z, 2)); 
-		double result = 2 * Math.asin(euclidDist / 2 / EARTH_RADIUS);
-		return result * EARTH_RADIUS;
-	}
-	
-	
-	
-	public boolean isEqual(Coordinate other) {
-		
-		return equals(other);
-		
-	}
-	
-	/**
-	 * @methodType assertion
-	 */
-	public void coordValidation(Coordinate test) {
-		String msg = "Your Coordinate has an invalid value!";
-		if (test == null) {
-			throw new IllegalArgumentException(msg);
-		}
+		assertInvariants();
 	}
 
-	
+	/**
+	 * @methodtype constructor
+	 */
+	public CartesianCoordinate(Coordinate other) {
+		assertValidCoordinate(other);
+		assertValidLatitude(other.getLatitude());
+		assertValidLongitude(other.getLongitude());
+		assertValidRadius(other.getRadius());
+
+		inCartesian(other.getLatitude(), other.getLongitude(), other.getRadius());
+		
+		assertInvariants();
+
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -82,34 +62,6 @@ public class CartesianCoordinate extends AbstractCoordinate {
 		return result;
 	}
 
-	/**
-	 * @methodtype booleanQuery
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof CartesianCoordinate)) {
-			return false;
-		}
-		CartesianCoordinate other = (CartesianCoordinate) obj;
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x)) {
-			return false;
-		}
-		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y)) {
-			return false;
-		}
-		if (Double.doubleToLongBits(z) != Double.doubleToLongBits(other.z)) {
-			return false;
-		}
-		return true;
-	}
-
-	
 	@Override
 	public String toString() {
 		return "CartesianCoordinate [x=" + x + ", y=" + y + ", z=" + z + "]";
@@ -118,65 +70,170 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	/**
 	 * @methodtype conversion
 	 */
-	public CartesianCoordinate inCartesian() {
-		return this;
-	}
-	
-	/**
-	 * @methodtype conversion
-	 */	
-	protected SphericCoordinate inSpheric(){
-		double r = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z); 
-		double lat = Math.toDegrees((Math.asin(this.z/r)));
-		double lon = Math.toDegrees((Math.atan2(this.y, this.x)));
+	protected SphericCoordinate inSpheric() {
+		assertValidX(this.x);
+		assertValidY(this.y);
+		assertValidZ(this.z);
 		
-		return new SphericCoordinate (lat,lon);
-		}
+		if(x == 0 && y == 0 && z == 0) return new SphericCoordinate(0,0,0);
+		
+		double r = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+		double lat = Math.toDegrees((Math.acos(this.z / r)));
+		double lon = Math.toDegrees((Math.acos(this.x / (this.x * this.x + this.y * this.y))));
+
+		return new SphericCoordinate(lat, lon, r);
+	}
 
 	/**
-	 * @return the x
+	 * @methodtype conversion
+	 */
+	private void inCartesian(double latitude, double longitude, double radius) {
+		assertValidLatitude(latitude);
+		assertValidLongitude(longitude);
+		assertValidRadius(radius);
+
+		double radLat = Math.toRadians(latitude);
+		double radLong = Math.toRadians(longitude);
+
+		x = radius * Math.cos(radLong) * Math.sin(radLat);
+		y = radius * Math.sin(radLong) * Math.sin(radLat);
+		z = radius * Math.cos(radLat);
+		
+		assertInvariants();
+
+	}
+
+	/**
+	 * @methodtype get
 	 */
 	public double getX() {
 		return x;
 	}
 
 	/**
-	 * @param x the x to set
+	 * @methodtype set
 	 */
 	public void setX(double x) {
+		assertValidX(x);
 		this.x = x;
 	}
 
 	/**
-	 * @return the y
+	 * @methodtype get
 	 */
 	public double getY() {
 		return y;
 	}
 
 	/**
-	 * @param y the y to set
+	 * @methodtype set
 	 */
 	public void setY(double y) {
+		assertValidY(y);
 		this.y = y;
 	}
 
 	/**
-	 * @return the z
+	 * @methodtype get
 	 */
 	public double getZ() {
 		return z;
 	}
 
 	/**
-	 * @param z the z to set
+	 * @methodtype set
 	 */
 	public void setZ(double z) {
+		assertValidZ(z);
 		this.z = z;
 	}
-		
+
+	/**
+	 * @methodtype get
+	 */
+	@Override
+	public double getRadius() {
+		return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+	}
+
+	/**
+	 * @methodtype set
+	 */
+	@Override
+	public void setRadius(double radius) {
+		assertValidRadius(radius);
+		inCartesian(this.getLatitude(), this.getLongitude(), radius);
+		assertInvariants();
+
+	}
+
+	/**
+	 * @methodtype get
+	 */
+	@Override
+	public double getLatitude() {
+		return this.inSpheric().getLatitude();
+	}
+
+	/**
+	 * @methodtype set
+	 */
+	@Override
+	public void setLatitude(double latitude) {
+		assertValidLatitude(latitude);
+		inCartesian(latitude, this.getLongitude(), this.getRadius());
+		assertInvariants();
+
+	}
+
+	/**
+	 * @methodtype get
+	 */
+	@Override
+	public double getLongitude() {
+		return this.inSpheric().getLongitude();
+	}
+
+	/**
+	 * @methodtype set
+	 */
+	@Override
+	public void setLongitude(double longitude) {
+		assertValidLongitude(longitude);
+		inCartesian(this.getLatitude(), longitude, this.getRadius());
+		assertInvariants();
+
+	}
+
+	/**
+	 * @methodtype assertion
+	 */
+	protected void assertValidX(double x) {
+		assert !Double.isNaN(x);
+	}
+
+	/**
+	 * @methodtype assertion
+	 */
+	protected void assertValidY(double y) {
+		assert !Double.isNaN(y);
+	}
+
+	/**
+	 * @methodtype assertion
+	 */
+	protected void assertValidZ(double z) {
+		assert !Double.isNaN(z);
 	}
 	
-	    
+	/**
+	 * @methodtype assertion
+	 */
+	protected void assertInvariants() {
+		assertValidX(x);
+		assertValidY(y);
+		assertValidZ(z);
+	}
+	
 
-
+}

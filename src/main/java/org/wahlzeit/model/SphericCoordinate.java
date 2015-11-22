@@ -1,7 +1,7 @@
 /*
  * SphericCoordinate
- * Version 2.0
- * Date 13.11.2015
+ * Version 2.1
+ * Date 22.11.2015
  * Copyright (c) 2015 by Sabrina Jahn
  */
 
@@ -32,48 +32,33 @@ public class SphericCoordinate extends AbstractCoordinate{
 	 * @MethodType constructor
 	 */
 	public SphericCoordinate(double latitude, double longitude, double radius) {
-		String msg = "Wrong parameters! longitude has interval [-180,180], latitude has interval [-90,90].";
-		// Input validation longitude
-		if (longitude < -180 || longitude > 180) {
-			throw new IllegalArgumentException(msg);
-		}
-		// Input validation latitude
-		if (latitude < -90 || latitude > 90) {
-			throw new IllegalArgumentException(msg);
-		}
 
 		setLatitude(latitude);
 		setLongitude(longitude);
 		setRadius(radius);
+		
+		assertInvariants();
 	}
 	
 	/**
-	 * @MethodType query
+	 * @methodtype constructor
 	 */
-	public double getDistance(Coordinate coord) {
-
-		coordValidation(coord);
-		SphericCoordinate other = (SphericCoordinate) coord;
-		if(coord instanceof CartesianCoordinate) {
-			other = ((CartesianCoordinate) coord).inSpheric();
-		}
+	public SphericCoordinate(Coordinate other) {
+		assertValidCoordinate(other);
 		
+		setLatitude(other.getLatitude());
+		setLongitude(other.getLongitude());
+		setRadius(other.getRadius());
 		
-		double distance = 0;
-		double radiant1 = Math.toRadians(this.latitude);
-		double radiant2 = Math.toRadians(other.getLatitude());
-		double radiantLongitudinalDistance = Math.toRadians(getLongitudinalDistance(other));
-
-		distance = Math.acos(Math.sin(radiant1) * Math.sin(radiant2) + Math.cos(radiant1) * Math.cos(radiant2) * Math.cos(radiantLongitudinalDistance)) * EARTH_RADIUS;
-		
-		return distance;
+		assertInvariants();
 	}
 
 	/**
 	 * @MethodType query
 	 */
 	public double getLatitudinalDistance(SphericCoordinate lat) {
-		coordValidation(lat);
+		assertValidCoordinate(lat);
+	
 		double la = latitude - lat.getLatitude();
 		// calculation shortest distance
 		if (Math.abs(la) > 90) {
@@ -86,22 +71,6 @@ public class SphericCoordinate extends AbstractCoordinate{
 		return la;
 	}
 
-	/**
-	 * @MethodType query
-	 */
-	public double getLongitudinalDistance(SphericCoordinate lon) {
-		coordValidation(lon);
-		double lo = longitude - lon.getLongitude();
-		// calculation shortest distance
-		if (Math.abs(lo) > 180) {
-			if (lo < 0) {
-				lo += 360;
-			} else {
-				lo -= 360;
-			}
-		}
-		return lo;
-	}
 
 	/**
 	 * @methodType get
@@ -111,24 +80,27 @@ public class SphericCoordinate extends AbstractCoordinate{
 	}
 
 	/**
-	 * @param latitude the latitude to set
+	 * @methodtype set
 	 */
 	public void setLatitude(double latitude) {
+		assertValidLatitude(latitude);
 		this.latitude = latitude;
 	}
 
-	/**
-	 * @param longitude the longitude to set
-	 */
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
 
 	/**
 	 * @methodType get
 	 */
 	public double getLongitude() {
 		return this.longitude;
+	}
+	
+	/**
+	 * @methodtype set
+	 */
+	public void setLongitude(double longitude) {
+		assertValidLongitude(longitude);
+		this.longitude = longitude;
 	}
 	
 	/**
@@ -141,25 +113,11 @@ public class SphericCoordinate extends AbstractCoordinate{
 	/**
 	 * @methodType set
 	 */
-	
 	public void setRadius(double radius){
-		String msg = "The value of radius has to be greater than 0!";
-		if (radius < 0){
-			throw new IllegalArgumentException(msg);
-		}
+		assertValidRadius(radius);
 		this.radius = radius;
 	}
 
-	/**
-	 * @methodType assertion
-	 */
-	public void coordValidation(Coordinate test) {
-		String msg = "Your Coordinate has an invalid value!";
-		if (test == null) {
-			throw new IllegalArgumentException(msg);
-		}
-	}
-	
 	/**
 	 * @methodtype conversion
 	 */
@@ -167,30 +125,6 @@ public class SphericCoordinate extends AbstractCoordinate{
 		return this;
 	}
 	
-	/**
-	 * @methodtype conversion
-	 */
-	protected CartesianCoordinate inCartesian() {
-
-		double radLat = Math.toRadians(this.latitude);
-		double radLong = Math.toRadians(this.longitude);
-
-		double x = this.radius * Math.cos(radLong)
-				* Math.sin(radLat);
-		double y = this.radius * Math.sin(radLong)
-				* Math.sin(radLat);
-		double z = this.radius * Math.cos(radLat);
-
-		return new CartesianCoordinate(x, y, z);
-	}
-	
-	
-	public boolean isEqual(Coordinate other) {
-		
-		return equals(other);
-		
-	}
-
 
 	@Override
 	public int hashCode() {
@@ -206,40 +140,23 @@ public class SphericCoordinate extends AbstractCoordinate{
 		return result;
 	}
 
+
 	/**
-	 * @methodtype booleanQuery
+	 * @methodtype conversion
 	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof SphericCoordinate)) {
-			return false;
-		}
-		SphericCoordinate other = (SphericCoordinate) obj;
-		if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude)) {
-			return false;
-		}
-		if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude)) {
-			return false;
-		}
-		if (Double.doubleToLongBits(radius) != Double.doubleToLongBits(other.radius)) {
-			return false;
-		}
-		return true;
-	}
-
-
 	@Override
 	public String toString() {
 		return "SphericCoordinate [latitude=" + latitude + ", longitude=" + longitude + ", radius=" + radius + "]";
 	}
 
-	
+	/**
+	 * @methodtype assertion
+	 */
+	protected void assertInvariants() {
+		assertValidLatitude(latitude);
+		assertValidLongitude(longitude);
+		assertValidRadius(radius);
+	}
 	
 	
 }

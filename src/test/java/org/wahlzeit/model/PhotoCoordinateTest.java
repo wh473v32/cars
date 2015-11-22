@@ -1,6 +1,6 @@
 /*
  * PhotoCoordinateTest
- * Version 1.0
+ * Version 2.1
  * Date 26.10.2015
  * Copyright (c) 2015 by Sabrina Jahn
  */
@@ -13,68 +13,76 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class PhotoCoordinateTest {
-	private SphericCoordinate location;
-	private SphericCoordinate location2;
-
-	private final double DELTA = 0.000001;
+	
+	private final double DELTA = 0.1;
+	private Coordinate spheric1, spheric2, spheric3, spheric4, spheric5, spheric6;
+	private Coordinate cartesian1, cartesian2, cartesian3, cartesian4, cartesian5, cartesian6;
 
 	@Before
-	public void setup() {
-		location = new SphericCoordinate(50, 150);
-		location2 = new SphericCoordinate(-40, -160);
-	}
+	public void setUp() {
+		spheric1 = new SphericCoordinate(0, 0);
+		spheric2 = new SphericCoordinate(15, 15);
 		
-
-	@Test
-	public void testDefaultConstructor() {
-		SphericCoordinate test = new SphericCoordinate();
-		assertEquals(0.0, test.getLatitude(), 0);
-		assertEquals(0.0, test.getLongitude(), 0);
-	}
-
-	@Test
-	public void testOtherConstructor() {
-		assertEquals(50, location.getLatitude(), DELTA);
-		assertEquals(150, location.getLongitude(), DELTA);
-	}
-
-	@Test
-	public void testGetLatitudinalDistance() {
-		double latDist = location.getLatitudinalDistance(location2);
-		assertEquals(90, latDist, DELTA);
-
-	}
-	
-	@Test
-	public void testGetLongitudinalDistance(){
-		double longDist = location.getLongitudinalDistance(location2);
-		assertEquals(-50, longDist, DELTA);
+		cartesian1 = new CartesianCoordinate(spheric1);
+		cartesian2 = new CartesianCoordinate(spheric2);
+		cartesian5 = new CartesianCoordinate(15, 20, 25);
+		cartesian6 = new CartesianCoordinate(20, 30, 40);
 		
+		spheric5 = new SphericCoordinate(cartesian5);
+		spheric6 = new SphericCoordinate(cartesian6);
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructor() {
+		spheric3 = new SphericCoordinate(93, 0);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructor2() {
+		spheric4 = new SphericCoordinate(0, -184);
+	}
+	
+	/*@Test
+	public void testGetDistance() {
+		assertEquals(2345.20, spheric1.getDistance(spheric2), DELTA);
+		assertEquals(10003.90, spheric1.getDistance(cartesian2), DELTA);
+		assertEquals(2345.20, cartesian1.getDistance(spheric2), DELTA);
+		assertEquals(2345.20, cartesian1.getDistance(cartesian2), DELTA);
+		
+	}*/
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetDistancNull() {
+		spheric1.getDistance(null);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetDistanceNull2() {
+		//assert false;
+		cartesian1.getDistance(null);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetDistanceDifferentSpheres() {
+		spheric2.getDistance(new SphericCoordinate(0, 0, 5));
+	} 
 
-	// TODO public void testGetDistance()
-	
-	
-	// Input validation test
-	@Test (expected = IllegalArgumentException.class)
-	public void testLatOutOfBouncehigh() {
-		SphericCoordinate location = new SphericCoordinate(91, 0);
-	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void testLatOutOfBouncelow() {
-		SphericCoordinate location = new SphericCoordinate(-91, 0);
-	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void testLongOutOfBouncehigh() {
-		SphericCoordinate location = new SphericCoordinate(0, 181);
-	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void testLongOutOfBouncelow() {
-		SphericCoordinate location = new SphericCoordinate(0, -181);
-	}
+	/*@Test
+	public void testIsEqual() {
+		assertFalse(spheric1.isEqual(null));
+		assertFalse(cartesian1.isEqual(null));
+		assertFalse(spheric1.isEqual(spheric2));
+		assertFalse(cartesian1.isEqual(cartesian2));
+		assertFalse(spheric1.isEqual(cartesian2));
+		assertFalse(cartesian1.isEqual(spheric2));
+		
+		assertTrue(spheric1.isEqual(new SphericCoordinate(spheric1)));
+		assertTrue(cartesian2.isEqual(new CartesianCoordinate(cartesian2)));
+		
+		assertTrue(spheric1.isEqual(cartesian1));
+		assertTrue(spheric3.isEqual(cartesian3));
+		assertTrue(cartesian1.isEqual(spheric1));
+		assertTrue(cartesian3.isEqual(spheric3));
+	}*/
 
-	
 }
