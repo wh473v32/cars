@@ -76,9 +76,9 @@ public class CartesianCoordinate extends AbstractCoordinate {
 		assertValidZ(this.z);
 		
 		if(x == 0 && y == 0 && z == 0) return new SphericCoordinate(0,0,0);
-		
 		double r = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 		double lat = Math.toDegrees((Math.acos(this.z / r)));
+		if (x == 0 && y == 0) return new SphericCoordinate(lat, 0, r);
 		double lon = Math.toDegrees((Math.acos(this.x / (this.x * this.x + this.y * this.y))));
 
 		return new SphericCoordinate(lat, lon, r);
