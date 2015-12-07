@@ -31,12 +31,14 @@ import org.wahlzeit.services.DataObject;
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.ObjectManager;
+import org.wahlzeit.utils.Pattern;
 
 import java.util.Map;
 
 /**
  * A photo represents a user-provided (uploaded) photo.
  */
+@Pattern(name = "Abstract Factory", participants = { "AbstractProduct", "ConcreteProduct" })
 @Entity
 public class Photo extends DataObject {
 
@@ -66,68 +68,68 @@ public class Photo extends DataObject {
 	public static final int MAX_PHOTO_HEIGHT = 600;
 	public static final int MAX_THUMB_PHOTO_WIDTH = 105;
 	public static final int MAX_THUMB_PHOTO_HEIGHT = 150;
-	
+
 	public Location location = null;
 
 	protected PhotoId id = null;
-	
+
 	/**
 	 *
 	 */
 	protected String ownerId;
-	
+
 	/**
-	 * Each photo can be viewed in different sizes (XS, S, M, L, XL)
-	 * Images are pre-computed in these sizes to optimize bandwidth when requested.
+	 * Each photo can be viewed in different sizes (XS, S, M, L, XL) Images are
+	 * pre-computed in these sizes to optimize bandwidth when requested.
 	 */
 	@Ignore
 	transient protected Map<PhotoSize, Image> images = new ArrayMap<PhotoSize, Image>();
-	
+
 	/**
 	 *
 	 */
 	protected boolean ownerNotifyAboutPraise = false;
 	protected EmailAddress ownerEmailAddress = EmailAddress.EMPTY;
 	protected Language ownerLanguage = Language.ENGLISH;
-	
+
 	/**
 	 *
 	 */
 	protected int width;
 	protected int height;
 	protected PhotoSize maxPhotoSize = PhotoSize.MEDIUM; // derived
-	
+
 	/**
 	 *
 	 */
 	protected Tags tags = Tags.EMPTY_TAGS;
-	
+
 	/**
 	 *
 	 */
 	protected PhotoStatus status = PhotoStatus.VISIBLE;
-	
+
 	/**
 	 *
 	 */
 	protected int praiseSum = 10;
 	protected int noVotes = 1;
 	protected int noVotesAtLastNotification = 1;
-	
+
 	/**
 	 *
 	 */
 	protected long creationTime = System.currentTimeMillis();
-	
+
 	/**
 	 * The default type is jpg
 	 */
 	protected String ending = "jpg";
-	
+
 	/**
 	 *
 	 */
-	//TODO: change it to a single long
+	// TODO: change it to a single long
 	@Id
 	Long idLong;
 	@Parent
@@ -149,7 +151,7 @@ public class Photo extends DataObject {
 
 		incWriteCount();
 	}
-	
+
 	public Photo(PhotoId myId, double latitude, double longitude) {
 		id = myId;
 		location = new Location(latitude, longitude);
@@ -403,7 +405,6 @@ public class Photo extends DataObject {
 		return creationTime;
 	}
 
-
 	public String getEnding() {
 		return ending;
 	}
@@ -426,14 +427,14 @@ public class Photo extends DataObject {
 		noVotesAtLastNotification = noVotes;
 		incWriteCount();
 	}
-	
+
 	/**
 	 * @methodtype get
 	 */
 	public Location getLocation() {
 		return location;
 	}
-	
+
 	/**
 	 * @methodtype set
 	 */

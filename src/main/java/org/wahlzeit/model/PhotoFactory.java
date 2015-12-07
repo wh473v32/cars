@@ -23,12 +23,14 @@ package org.wahlzeit.model;
 import org.wahlzeit.services.LogBuilder;
 
 import java.util.logging.Logger;
+import org.wahlzeit.utils.Pattern;
 
 /**
  * An Abstract Factory for creating photos and related objects.
  */
-public class PhotoFactory {
+@Pattern(name = "Singleton", participants = { "Singleton"})
 
+public class PhotoFactory {
 	private static final Logger log = Logger.getLogger(PhotoFactory.class.getName());
 	/**
 	 * Hidden singleton instance; needs to be initialized from the outside.
@@ -87,21 +89,23 @@ public class PhotoFactory {
 	}
 
 	/**
-	 * Loads a photo. The Java object is loaded from the Google Datastore, the Images in all sizes are loaded from the
-	 * Google Cloud storage.
+	 * Loads a photo. The Java object is loaded from the Google Datastore, the
+	 * Images in all sizes are loaded from the Google Cloud storage.
 	 */
 	public Photo loadPhoto(PhotoId id) {
-	   /* Photo result =
-                OfyService.ofy().load().type(Photo.class).ancestor(KeyFactory.createKey("Application", "Wahlzeit")).filter(Photo.ID, id).first().now();
-        for (PhotoSize size : PhotoSize.values()) {
-            GcsFilename gcsFilename = new GcsFilename("picturebucket", filename);
-
-
-
-        }*/
+		/*
+		 * Photo result =
+		 * OfyService.ofy().load().type(Photo.class).ancestor(KeyFactory.
+		 * createKey("Application", "Wahlzeit")).filter(Photo.ID,
+		 * id).first().now(); for (PhotoSize size : PhotoSize.values()) {
+		 * GcsFilename gcsFilename = new GcsFilename("picturebucket", filename);
+		 * 
+		 * 
+		 * 
+		 * }
+		 */
 		return null;
 	}
-
 
 	/**
 	 *

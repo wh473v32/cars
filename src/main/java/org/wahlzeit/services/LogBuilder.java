@@ -3,6 +3,7 @@ package org.wahlzeit.services;
 import org.wahlzeit.model.Client;
 import org.wahlzeit.model.UserManager;
 import org.wahlzeit.model.UserSession;
+import org.wahlzeit.utils.Pattern;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -17,6 +18,10 @@ import java.io.StringWriter;
  * 
  * @review
  */
+
+@Pattern(name = "Builder", participants = { "Builder","ConcreteBuilder","Director","Product"})
+
+
 public class LogBuilder {
 
 	protected static final String LEVEL = "level";
@@ -33,19 +38,18 @@ public class LogBuilder {
 
 	protected StringBuilder logMessage;
 
-
 	protected LogBuilder() {
 		logMessage = new StringBuilder();
 	}
 
-
-	// create-methods --------------------------------------------------------------------------------------------------
+	// create-methods
+	// --------------------------------------------------------------------------------------------------
 
 	/**
 	 * @methodtype factory
 	 *
-	 * Creates a LogBuilder Object and adds the Level (user level), the current <code>HttpSession</code>, and the
-	 * clients name.
+	 *             Creates a LogBuilder Object and adds the Level (user level),
+	 *             the current <code>HttpSession</code>, and the clients name.
 	 */
 	public static LogBuilder createUserMessage() {
 		return doCreateMessage(USER_LEVEL);
@@ -54,8 +58,9 @@ public class LogBuilder {
 	/**
 	 * @methodtype factory
 	 *
-	 * Primitive Method that creates a LogBuilder Object and adds the Level, the current <code>HttpSession</code>, and
-	 * the clients name.
+	 *             Primitive Method that creates a LogBuilder Object and adds
+	 *             the Level, the current <code>HttpSession</code>, and the
+	 *             clients name.
 	 */
 	protected static LogBuilder doCreateMessage(String level) {
 		LogBuilder result = new LogBuilder();
@@ -97,14 +102,15 @@ public class LogBuilder {
 		}
 	}
 
-
-	// add-methods -----------------------------------------------------------------------------------------------------
+	// add-methods
+	// -----------------------------------------------------------------------------------------------------
 
 	/**
 	 * @methodtype factory
 	 *
-	 * Creates a LogBuilder Object and adds the Level (system level), the current <code>HttpSession</code>, and the
-	 * clients name.
+	 *             Creates a LogBuilder Object and adds the Level (system
+	 *             level), the current <code>HttpSession</code>, and the clients
+	 *             name.
 	 */
 	public static LogBuilder createSystemMessage() {
 		return doCreateMessage(SYSTEM_LEVEL);
@@ -113,7 +119,7 @@ public class LogBuilder {
 	/**
 	 * @methodtype mutate
 	 *
-	 * Adds the following to the LogMessage: ", <name>=<value>".
+	 *             Adds the following to the LogMessage: ", <name>=<value>".
 	 */
 	public LogBuilder addParameter(String name, int value) {
 		add(name + NAME_VALUE_SEPARATOR + String.valueOf(value));
@@ -123,7 +129,7 @@ public class LogBuilder {
 	/**
 	 * @methodtype mutate
 	 *
-	 * Adds the following to the LogMessage: ", <name>=<value>".
+	 *             Adds the following to the LogMessage: ", <name>=<value>".
 	 */
 	public LogBuilder addParameter(String name, boolean value) {
 		add(name + NAME_VALUE_SEPARATOR + String.valueOf(value));
@@ -133,7 +139,7 @@ public class LogBuilder {
 	/**
 	 * @methodtype mutate
 	 *
-	 * Adds the following to the LogMessage: ", <name>=<value>".
+	 *             Adds the following to the LogMessage: ", <name>=<value>".
 	 */
 	public LogBuilder addParameter(String name, String value) {
 		add(name + NAME_VALUE_SEPARATOR + value);
@@ -143,7 +149,8 @@ public class LogBuilder {
 	/**
 	 * @methodtype mutate
 	 *
-	 * Adds the following to the LogMessage: ", <name>=<value>.toString()".
+	 *             Adds the following to the LogMessage:
+	 *             ", <name>=<value>.toString()".
 	 */
 	public LogBuilder addParameter(String name, Object value) {
 		add(name + NAME_VALUE_SEPARATOR + value.toString());
@@ -153,7 +160,7 @@ public class LogBuilder {
 	/**
 	 * @methodtype mutate
 	 *
-	 * Adds the message to the LogMessage: ", <message>".
+	 *             Adds the message to the LogMessage: ", <message>".
 	 */
 	public LogBuilder addMessage(String message) {
 		add(message);
@@ -163,7 +170,8 @@ public class LogBuilder {
 	/**
 	 * @methodtype mutate
 	 *
-	 * Adds the stacktrace and the <code>exceptionMessage</code> to the log message.
+	 *             Adds the stacktrace and the <code>exceptionMessage</code> to
+	 *             the log message.
 	 */
 	public LogBuilder addException(String exceptionMessage, Throwable throwable) {
 		add(EXCEPTION_REASON + NAME_VALUE_SEPARATOR + exceptionMessage);
@@ -173,21 +181,22 @@ public class LogBuilder {
 		return this;
 	}
 
-
-	// build-method ----------------------------------------------------------------------------------------------------
+	// build-method
+	// ----------------------------------------------------------------------------------------------------
 
 	/**
 	 * @methodtype mutate
 	 *
-	 * Adds the info that the action is performed the log message: "action=<action>".
+	 *             Adds the info that the action is performed the log message:
+	 *             "action=<action>".
 	 */
 	public LogBuilder addAction(String action) {
 		add(ACTION + NAME_VALUE_SEPARATOR + action);
 		return this;
 	}
 
-
-	// hidden setter and getter methods --------------------------------------------------------------------------------
+	// hidden setter and getter methods
+	// --------------------------------------------------------------------------------
 
 	/**
 	 * @methodtype conversion
