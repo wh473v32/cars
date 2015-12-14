@@ -7,10 +7,13 @@
 
 package org.wahlzeit.model;
 
+import java.util.HashMap;
+
 public abstract class AbstractCoordinate implements Coordinate {
 	
 	protected static final double DELTA = 0.1;
-	
+	protected static final int MAX_SIZE = 1024;
+	protected static HashMap<Integer, AbstractCoordinate> instance = new HashMap<>(MAX_SIZE);
 	/** 
 	 * @methodtype query
 	 */
@@ -76,6 +79,22 @@ public abstract class AbstractCoordinate implements Coordinate {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * @methodtype comparison
+	 */
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(this.getLatitude());
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(this.getLongitude());
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(this.getRadius());
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
 	}
 	
 	/**

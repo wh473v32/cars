@@ -17,7 +17,7 @@ public class Location {
 	 * @methodtype constructor
 	 */
 	public Location() {
-		coord = new SphericCoordinate();
+		this.coord = coord.getInstance();
 		location = " ";
 	}
 	/**
@@ -32,7 +32,7 @@ public class Location {
 	 * @methodtype constructor
 	 */
 	public Location(double latitude, double longitude) {
-		coord = new SphericCoordinate(latitude, longitude);
+		this.coord = coord.getInstance(latitude, longitude);
 		location = " ";
 	}
 
@@ -40,7 +40,7 @@ public class Location {
 	 * @methodtype constructor
 	 */
 	public Location(double latitude, double longitude, String location) {
-		this.coord = new SphericCoordinate(latitude, longitude);
+		this.coord = coord.getInstance(latitude, longitude);
 		this.location = location;
 	}
 

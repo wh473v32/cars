@@ -14,52 +14,70 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	private double z;
 
 	/**
-	 * @methodtype constructor
+	 * @methodtype factory method
 	 */
-	public CartesianCoordinate() {
-		this(0,0,0);
+	public static CartesianCoordinate getInstance() {
+		return getInstance(0, 0, 0);
+	}
+
+	/**
+	 * @methodtype factory method
+	 */
+	public static CartesianCoordinate getInstance(double x, double y, double z) {
+		CartesianCoordinate temp = new CartesianCoordinate(x, y, z);
+		synchronized (instance) {
+			if (!instance.containsKey(temp.hashCode())) {
+				instance.put(temp.hashCode(), temp);
+			}
+			temp = (CartesianCoordinate) instance.get(temp.hashCode());
+		}
+
+		return temp;
+
+	}
+
+	/**
+	 * @methodtype factory method
+	 */
+	public static CartesianCoordinate getInstance(Coordinate other) {
+		CartesianCoordinate temp = new CartesianCoordinate(other);
+		synchronized (instance) {
+			if (!instance.containsKey(temp.hashCode())) {
+				instance.put(temp.hashCode(), temp);
+			}
+			temp = (CartesianCoordinate) instance.get(temp.hashCode());
+		}
+
+		return temp;
+
 	}
 
 	/**
 	 * @methodtype constructor
 	 */
-	public CartesianCoordinate(double x, double y, double z) {
+	protected CartesianCoordinate(double x, double y, double z) {
 		assertInvariants();
-		
+
 		setX(x);
 		setY(y);
 		setZ(z);
-		
+
 		assertInvariants();
 	}
 
 	/**
 	 * @methodtype constructor
 	 */
-	public CartesianCoordinate(Coordinate other) {
+	protected CartesianCoordinate(Coordinate other) {
 		assertValidCoordinate(other);
 		assertValidLatitude(other.getLatitude());
 		assertValidLongitude(other.getLongitude());
 		assertValidRadius(other.getRadius());
 
 		inCartesian(other.getLatitude(), other.getLongitude(), other.getRadius());
-		
+
 		assertInvariants();
 
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(x);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(y);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(z);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
 	}
 
 	@Override
@@ -74,11 +92,13 @@ public class CartesianCoordinate extends AbstractCoordinate {
 		assertValidX(this.x);
 		assertValidY(this.y);
 		assertValidZ(this.z);
-		
-		if(x == 0 && y == 0 && z == 0) return new SphericCoordinate(0,0,0);
+
+		if (x == 0 && y == 0 && z == 0)
+			return new SphericCoordinate(0, 0, 0);
 		double r = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 		double lat = Math.toDegrees((Math.acos(this.z / r)));
-		if (x == 0 && y == 0) return new SphericCoordinate(lat, 0, r);
+		if (x == 0 && y == 0)
+			return new SphericCoordinate(lat, 0, r);
 		double lon = Math.toDegrees((Math.acos(this.x / (this.x * this.x + this.y * this.y))));
 
 		return new SphericCoordinate(lat, lon, r);
@@ -98,7 +118,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 		x = radius * Math.cos(radLong) * Math.sin(radLat);
 		y = radius * Math.sin(radLong) * Math.sin(radLat);
 		z = radius * Math.cos(radLat);
-		
+
 		assertInvariants();
 
 	}
@@ -225,7 +245,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	protected void assertValidZ(double z) {
 		assert !Double.isNaN(z);
 	}
-	
+
 	/**
 	 * @methodtype assertion
 	 */
@@ -234,6 +254,5 @@ public class CartesianCoordinate extends AbstractCoordinate {
 		assertValidY(y);
 		assertValidZ(z);
 	}
-	
 
 }

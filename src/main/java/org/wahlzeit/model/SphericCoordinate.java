@@ -7,49 +7,82 @@
 
 package org.wahlzeit.model;
 
-public class SphericCoordinate extends AbstractCoordinate{
-	
+public class SphericCoordinate extends AbstractCoordinate {
+
 	private double latitude;
 	private double longitude;
 	private double radius;
 
-	
 	private static final int EARTH_RADIUS = 6371;
 
-	
 	/**
-	 * @MethodType constructor
+	 * @methodtype factory method
 	 */
-	public SphericCoordinate() {
-		this(0, 0);
+	public static SphericCoordinate getInstance() {
+		return getInstance(0, 0, EARTH_RADIUS);
 	}
-	
-	public SphericCoordinate(double latitude, double longitude) {
-		this(latitude, longitude, EARTH_RADIUS);
+
+	/**
+	 * @methodtype factory method
+	 */
+	public static SphericCoordinate getInstance(double latitude, double longitude) {
+		return getInstance(latitude, longitude, EARTH_RADIUS);
+	}
+
+	/**
+	 * @methodtype factory method
+	 */
+	public static SphericCoordinate getInstance(double latitude, double longitude, double radius) {
+		SphericCoordinate temp = new SphericCoordinate(latitude, longitude, radius);
+		synchronized (instance) {
+			if (!instance.containsKey(temp.hashCode())) {
+				instance.put(temp.hashCode(), temp);
+			}
+			temp = (SphericCoordinate) instance.get(temp.hashCode());
+		}
+
+		return temp;
+
+	}
+
+	/**
+	 * @methodtype factory method
+	 */
+	public static SphericCoordinate getInstance(Coordinate other) {
+		SphericCoordinate temp = new SphericCoordinate(other);
+		synchronized (instance) {
+			if (!instance.containsKey(temp.hashCode())) {
+				instance.put(temp.hashCode(), temp);
+			}
+			temp = (SphericCoordinate) instance.get(temp.hashCode());
+		}
+
+		return temp;
+
 	}
 
 	/**
 	 * @MethodType constructor
 	 */
-	public SphericCoordinate(double latitude, double longitude, double radius) {
+	protected SphericCoordinate(double latitude, double longitude, double radius) {
 
 		setLatitude(latitude);
 		setLongitude(longitude);
 		setRadius(radius);
-		
+
 		assertInvariants();
 	}
-	
+
 	/**
 	 * @methodtype constructor
 	 */
-	public SphericCoordinate(Coordinate other) {
+	protected SphericCoordinate(Coordinate other) {
 		assertValidCoordinate(other);
-		
+
 		setLatitude(other.getLatitude());
 		setLongitude(other.getLongitude());
 		setRadius(other.getRadius());
-		
+
 		assertInvariants();
 	}
 
@@ -58,7 +91,7 @@ public class SphericCoordinate extends AbstractCoordinate{
 	 */
 	public double getLatitudinalDistance(SphericCoordinate lat) {
 		assertValidCoordinate(lat);
-	
+
 		double la = latitude - lat.getLatitude();
 		// calculation shortest distance
 		if (Math.abs(la) > 90) {
@@ -70,7 +103,6 @@ public class SphericCoordinate extends AbstractCoordinate{
 		}
 		return la;
 	}
-
 
 	/**
 	 * @methodType get
@@ -87,14 +119,13 @@ public class SphericCoordinate extends AbstractCoordinate{
 		this.latitude = latitude;
 	}
 
-
 	/**
 	 * @methodType get
 	 */
 	public double getLongitude() {
 		return this.longitude;
 	}
-	
+
 	/**
 	 * @methodtype set
 	 */
@@ -102,18 +133,18 @@ public class SphericCoordinate extends AbstractCoordinate{
 		assertValidLongitude(longitude);
 		this.longitude = longitude;
 	}
-	
+
 	/**
 	 * @methodType get
 	 */
-	public double getRadius(){
+	public double getRadius() {
 		return this.radius;
 	}
-	
+
 	/**
 	 * @methodType set
 	 */
-	public void setRadius(double radius){
+	public void setRadius(double radius) {
 		assertValidRadius(radius);
 		this.radius = radius;
 	}
@@ -124,22 +155,6 @@ public class SphericCoordinate extends AbstractCoordinate{
 	protected SphericCoordinate inSpheric() {
 		return this;
 	}
-	
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(latitude);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(longitude);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(radius);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
-
 
 	/**
 	 * @methodtype conversion
@@ -157,6 +172,5 @@ public class SphericCoordinate extends AbstractCoordinate{
 		assertValidLongitude(longitude);
 		assertValidRadius(radius);
 	}
-	
-	
+
 }

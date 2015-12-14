@@ -20,26 +20,26 @@ public class PhotoCoordinateTest {
 
 	@Before
 	public void setUp() {
-		spheric1 = new SphericCoordinate(0, 0);
-		spheric2 = new SphericCoordinate(15, 15);
+		spheric1 = SphericCoordinate.getInstance(0, 0);
+		spheric2 = SphericCoordinate.getInstance(15, 15);
 		
-		cartesian1 = new CartesianCoordinate(spheric1);
-		cartesian2 = new CartesianCoordinate(spheric2);
-		cartesian5 = new CartesianCoordinate(15, 20, 25);
-		cartesian6 = new CartesianCoordinate(20, 30, 40);
+		cartesian1 = CartesianCoordinate.getInstance(spheric1);
+		cartesian2 = CartesianCoordinate.getInstance(spheric2);
+		cartesian5 = CartesianCoordinate.getInstance(15, 20, 25);
+		cartesian6 = CartesianCoordinate.getInstance(20, 30, 40);
 		
-		spheric5 = new SphericCoordinate(cartesian5);
-		spheric6 = new SphericCoordinate(cartesian6);
+		spheric5 = SphericCoordinate.getInstance(cartesian5);
+		spheric6 = SphericCoordinate.getInstance(cartesian6);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructor() {
-		spheric3 = new SphericCoordinate(93, 0);
+		spheric3 = SphericCoordinate.getInstance(93, 0);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructor2() {
-		spheric4 = new SphericCoordinate(0, -184);
+		spheric4 = SphericCoordinate.getInstance(0, -184);
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class PhotoCoordinateTest {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetDistanceDifferentSpheres() {
-		spheric2.getDistance(new SphericCoordinate(0, 0, 5));
+		spheric2.getDistance(SphericCoordinate.getInstance(0, 0, 5));
 	} 
 
 	@Test
@@ -76,8 +76,8 @@ public class PhotoCoordinateTest {
 		assertFalse(spheric1.isEqual(cartesian2));
 		//assertFalse(cartesian1.isEqual(spheric2));
 		
-		assertTrue(spheric1.isEqual(new SphericCoordinate(spheric1)));
-		assertTrue(cartesian2.isEqual(new CartesianCoordinate(cartesian2)));
+		assertTrue(spheric1.isEqual(SphericCoordinate.getInstance(spheric1)));
+		assertTrue(cartesian2.isEqual(CartesianCoordinate.getInstance(cartesian2)));
 		
 		assertTrue(spheric1.isEqual(cartesian1));
 		assertTrue(cartesian1.isEqual(spheric1));
