@@ -14,6 +14,7 @@ public abstract class AbstractCoordinate implements Coordinate {
 	protected static final double DELTA = 0.1;
 	protected static final int MAX_SIZE = 1024;
 	protected static HashMap<Integer, AbstractCoordinate> instance = new HashMap<>(MAX_SIZE);
+	
 	/** 
 	 * @methodtype query
 	 */
