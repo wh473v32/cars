@@ -7,8 +7,6 @@
 
 package org.wahlzeit.model;
 
-import org.wahlzeit.model.CarsPhoto.bodyType;
-import org.wahlzeit.model.CarsPhoto.motorType;
 
 public class CarType {
 
@@ -26,8 +24,8 @@ public class CarType {
 		this.series = series;
 	}
 
-	public Car instantiate(String chassisNumber, motorType motor, int enginePower, int doors, bodyType type) {
-		return new Car(this, chassisNumber, motor, enginePower, doors, type);
+	public Car createInstance() {
+		return new Car(this);
 	}
 
 	/**

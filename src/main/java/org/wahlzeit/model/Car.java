@@ -7,12 +7,17 @@
 
 package org.wahlzeit.model;
 
-import org.wahlzeit.model.CarsPhoto.bodyType;
-import org.wahlzeit.model.CarsPhoto.motorType;
-
 public class Car {
 
 	private CarType carType;
+
+	protected enum motorType {
+		diesel, gasoline, electric, LPG, unknown, other
+	};
+
+	protected enum bodyType {
+		cabrio, coupe, limousine, SUV, minibus, combi, unknown, other
+	};
 
 	private String chassisNumber; // Fahrgestellnummer
 	private motorType motor; // Diesel, Benzin...
@@ -23,14 +28,9 @@ public class Car {
 	/**
 	 * @methodtype constructor
 	 */
-	public Car(CarType ct, String chassisNumber, motorType motor, int enginePower, int doors, bodyType type) {
+	public Car(CarType ct) {
 
 		this.carType = ct;
-		this.chassisNumber = chassisNumber;
-		this.motor = motor;
-		this.enginePower = enginePower;
-		this.doors = doors;
-		this.type = type;
 
 	}
 
@@ -94,7 +94,7 @@ public class Car {
 	 * @methodtype get
 	 */
 
-	public CarType getType() {
+	public CarType getCarType() {
 		return carType;
 	}
 
@@ -102,8 +102,24 @@ public class Car {
 	 * @methodtype set
 	 */
 
-	public void setType(CarType carType) {
+	public void setCarType(CarType carType) {
 		this.carType = carType;
+	}
+
+	/**
+	 * @methodtype get
+	 */
+
+	public bodyType getType() {
+		return type;
+	}
+
+	/**
+	 * @methodtype set
+	 */
+
+	public void setType(bodyType type) {
+		this.type = type;
 	}
 
 }
